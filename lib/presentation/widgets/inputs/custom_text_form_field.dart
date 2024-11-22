@@ -1,39 +1,47 @@
-
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatelessWidget {
-
-  final String? label;
+  final String label;
   final String? hint;
   final String? errorMessage;
-  final bool obscureText;
+  final bool? obscure;
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
-  const CustomTextFormField({super.key, this.label, this.hint, this.errorMessage, this.onChanged, this.validator, this.obscureText = false});
+
+  const CustomTextFormField(
+      {super.key,
+      required this.label,
+      this.hint,
+      this.errorMessage,
+      this.onChanged,
+      this.validator,this.obscure});
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
+    final color = Theme.of(context).colorScheme;
     final border = OutlineInputBorder(borderRadius: BorderRadius.circular(40));
+    final borderError =
+        border.copyWith(borderSide: BorderSide(color: color.error));
+
     return TextFormField(
       onChanged: onChanged,
       validator: validator,
-      obscureText:obscureText ,
+      obscureText: obscure ?? false ,
       decoration: InputDecoration(
-          
-          enabledBorder: border,
-          focusedBorder:
-              border.copyWith(borderSide: BorderSide(color: colors.primary)),
-          isDense: true,
-          label: Text( label ?? ''),
-          hintText: hint ?? '',
-          errorText: errorMessage,
-          errorBorder:
-              border.copyWith(borderSide: BorderSide(color: colors.error)),
-          focusedErrorBorder:
-              border.copyWith(borderSide: BorderSide(color: colors.error)),
-          focusColor: colors.primary),
+        enabledBorder: border,
+        focusedBorder:
+            border.copyWith(borderSide: BorderSide(color: color.primary)),
+        errorBorder: borderError,
+        focusedErrorBorder: borderError,
+        isDense: true,
+        label: Text(label),
+        hintText: hint,
+        errorText: errorMessage,
+        
+        // prefixIcon: Icon(Icons.supervised_user_circle, color: color.primary)
+      ),
     );
   }
 }
